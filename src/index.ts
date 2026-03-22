@@ -22,7 +22,50 @@ const productSchema = z.object({
 
 // GET /api/products
 fastify.get('/api/products', async (request, reply) => {
-    return reply.status(200).send(products);
+    return reply.code(200).send(products);
+});
+
+// PUT /api/products/:productId
+fastify.put('/api/products/:productId', async (request, reply) => {
+    try {
+        const { productId } = request.params as { productId: string };
+
+        if (!isUUID(productId)) {
+            return reply.code(400).send({
+                message: 'Invalid productId',
+            });
+        }
+
+        const productIndex = products.findIndex(p => p.id === productId);
+
+        if (productIndex === -1) {
+            return reply.code(404).send({
+                message: 'Product not found',
+            });
+        }
+
+        const parsed = productSchema.parse(request.body);
+
+        const updatedProduct = {
+            id: productId,
+            ...parsed,
+        };
+
+        products[productIndex] = updatedProduct;
+
+        return reply.code(200).send(updatedProduct);
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            return reply.code(400).send({
+                message: 'Validation error',
+                errors: error.issues,
+            });
+        }
+
+        return reply.code(500).send({
+            message: 'Internal server error',
+        });
+    }
 });
 
 // POST create
@@ -39,8 +82,44 @@ fastify.post('/api/products', async (request, reply) => {
 
         return reply.status(201).send(newProduct);
     } catch (error) {
-        return reply.status(400).send({
-            message: 'Invalid request body',
+        if (error instanceof z.ZodError) {
+            return reply.code(400).send({
+                message: 'Validation error',
+                errors: error.issues,
+            });
+        }
+
+        return reply.code(500).send({
+            message: 'Internal server error',
+        });
+    }
+});
+
+// DELETE /api/products/:productId
+fastify.delete('/api/products/:productId', async (request, reply) => {
+    try {
+        const { productId } = request.params as { productId: string };
+
+        if (!isUUID(productId)) {
+            return reply.code(400).send({
+                message: 'Invalid productId',
+            });
+        }
+
+        const productIndex = products.findIndex(p => p.id === productId);
+
+        if (productIndex === -1) {
+            return reply.code(404).send({
+                message: 'Product not found',
+            });
+        }
+
+        products.splice(productIndex, 1);
+
+        return reply.code(204).send();
+    } catch (error) {
+        return reply.code(500).send({
+            message: 'Internal server error',
         });
     }
 });
@@ -62,9 +141,22 @@ fastify.get('/api/products/:productId', async (request, reply) => {
         });
     }
 
-    return reply.status(200).send(product);
+    return reply.code(200).send(product);
 });
 
+fastify.setNotFoundHandler((request, reply) => {
+    reply.code(404).send({
+        message: `Route ${request.method} ${request.url} not found`,
+    });
+});
+
+fastify.setErrorHandler((error, request, reply) => {
+    fastify.log.error(error);
+
+    reply.code(500).send({
+        message: 'Internal server error',
+    });
+});
 
 const start = async () => {
     try {
