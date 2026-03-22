@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import dotenv from 'dotenv';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
+import { validate as isUUID } from 'uuid';
 
 dotenv.config();
 
@@ -42,6 +43,26 @@ fastify.post('/api/products', async (request, reply) => {
             message: 'Invalid request body',
         });
     }
+});
+
+// GET /api/products/:productId
+fastify.get('/api/products/:productId', async (request, reply) => {
+    const { productId } = request.params as { productId: string };
+    if (!isUUID(productId)) {
+        return reply.status(400).send({
+            message: 'Invalid productId',
+        });
+    }
+
+    const product = products.find(p => p.id === productId);
+
+    if (!product) {
+        return reply.status(404).send({
+            message: 'Product not found',
+        });
+    }
+
+    return reply.status(200).send(product);
 });
 
 
