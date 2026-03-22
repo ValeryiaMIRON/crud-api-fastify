@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "ts-node-dev --respawn src/index.ts",
     "start:prod": "tsc && node dist/index.js",
-    "test": "tsx --test test/products.test.ts"
+    "test": "tsx --test test/products.test.ts",
+    "start:multi": "tsx src/cluster.ts"
   },
   "repository": {
     "type": "git",

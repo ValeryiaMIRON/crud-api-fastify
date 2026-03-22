@@ -1,18 +1,12 @@
-import dotenv from 'dotenv';
-import { fastify } from './app';
+import 'dotenv/config';
 
-dotenv.config();
+console.log('index: process.env.MODE=', process.env.MODE, 'process.env.PORT=', process.env.PORT);
+
+import { fastify } from './app';
 
 const PORT = Number(process.env.PORT) || 4000;
 
-const start = async () => {
-    try {
-        await fastify.listen({ port: PORT });
-        console.log(`Server running on http://localhost:${PORT}`);
-    } catch (err) {
-        fastify.log.error(err);
-        process.exit(1);
-    }
-};
-
-start();
+fastify.listen({ port: PORT, host: '0.0.0.0' })
+    .then(() => {
+        console.log(`Worker running on ${PORT}`);
+    });
