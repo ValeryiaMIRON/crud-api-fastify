@@ -3,8 +3,8 @@
 Simple Product Catalog CRUD API with in-memory store and cluster mode support (Fastify + Zod + uuid).
 
 ### Quick summary
-- Keep `.env.example` with `MODE=multi, PORT=4000`
-- For  npm run start:dev use `MODE=dev` in `.env.example`
+- Keep `.env.example` with `MODE=dev, PORT=4000`
+- For  npm run start:multi use `MODE=multi` in `.env.example`
 
 ## Description
 
@@ -46,11 +46,10 @@ Supported modes:
 - `MODE=dev` — single instance, no IPC
 
 `.env.example` should contain:
-MODE=multi
+MODE=dev
 PORT=4000
 
 Run
-Development (single instance)
 MODE=dev PORT=4000 npm run start:dev
 Cluster (required by assignment)
 MODE=multi PORT=4000 npm run start:multi
