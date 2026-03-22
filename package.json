@@ -1,0 +1,38 @@
+{
+  "name": "crud-api-fastify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "ts-node-dev --respawn src/index.ts",
+    "start:prod": "tsc && node dist/index.js",
+    "test": "tsx --test test/products.test.ts",
+    "start:multi": "tsx src/cluster.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValeryiaMIRON/crud-api-fastify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ValeryiaMIRON/crud-api-fastify/issues"
+  },
+  "homepage": "https://github.com/ValeryiaMIRON/crud-api-fastify#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "fastify": "^5.8.2",
+    "uuid": "^13.0.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/supertest": "^7.2.0",
+    "supertest": "^7.2.2",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
